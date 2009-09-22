@@ -47,11 +47,10 @@ $critical_at = ARGV[3]
 
 validate_options
 
-puts $host
-puts $community
-puts $warn_at
-puts $critical_at
-    
+#puts $host
+#puts $community
+#puts $warn_at
+#puts $critical_at
 
 crit = []
 warn = []
