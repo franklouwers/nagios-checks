@@ -39,7 +39,10 @@ class CheckPPS_Test <    Test::Unit::TestCase
     stub("foo", :value => 0))
     SNMP::Manager.expects(:open).yields(mock_snmp)
     Time.stubs(:now).returns(Time.parse("2009-01-01 08:30:30"))
+    Kernel.expects(:exit).with(0)
     run_script 'check_pps.rb', "dontcare", "dontcare"
+    
+    
   end
 
 
@@ -54,6 +57,8 @@ class CheckPPS_Test <    Test::Unit::TestCase
     stub("goo", :value => 1), stub("foo", :value => 1), stub("foo", :value => "stub-1/0"), 
     stub("foo", :value => "alias"), stub("fii", :value => 42), stub("foo", :value => 1), 
     stub("foo", :value => 1))
+    
+    Kernel.expects(:exit).with(0)
 
     SNMP::Manager.expects(:open).yields(mock_snmp)
     response = catch_output do
@@ -74,6 +79,9 @@ class CheckPPS_Test <    Test::Unit::TestCase
     stub("foo", :value => "alias"), stub("fii", :value => 42), stub("foo", :value => 101), 
     stub("foo", :value => 1))
 
+    Kernel.expects(:exit).with(1) #exit 1 = warn
+
+
     SNMP::Manager.expects(:open).yields(mock_snmp)
     response = catch_output do
       run_script 'check_pps.rb', "dontcare", "dontcare", "100", "200"
@@ -93,6 +101,9 @@ class CheckPPS_Test <    Test::Unit::TestCase
     stub("foo", :value => "alias"), stub("fii", :value => 42), stub("foo", :value => 201), 
     stub("foo", :value => 1))
 
+    Kernel.expects(:exit).with(2) #exit 2 = crit
+
+
     SNMP::Manager.expects(:open).yields(mock_snmp)
     response = catch_output do
       run_script 'check_pps.rb', "dontcare", "dontcare", "100", "200"
@@ -101,6 +112,6 @@ class CheckPPS_Test <    Test::Unit::TestCase
     assert_match /^CRITICAL .*$/, response
   end
   
-
+# als foute snmp community: SNMP::RequestTimeout
 
 end

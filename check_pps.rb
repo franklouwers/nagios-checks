@@ -6,11 +6,11 @@ require 'snmp'
 
 
 def usage
-  puts "#{$0} host [community [warn_at [critical_at]]]"
+  puts "Usage: #{$0} host [community [warn_at [critical_at]]]"
   puts "  community: defaults to public"
   puts "  warn_at: defaults to 10000"
   puts "  warn_at: defaults to 30000"
-  exit(0)
+  Kernel.exit(3)
 end
 
 def validate_options
@@ -120,12 +120,16 @@ if not crit.empty?
   output += "CRITICAL "
   output += crit.join('-')
   output += " "
+  ret = 2
 end
 if not warn.empty?
   output += "WARNING "
   output += warn.join('-')
+  ret = 1 unless ret == 2
 end
 if output.empty?
   output = "OK"
+  ret = 0
 end
 puts output
+Kernel.exit(ret)
